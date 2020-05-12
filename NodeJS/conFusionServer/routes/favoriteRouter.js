@@ -126,10 +126,9 @@ favoriteRouter.route('/:dishId')
         var userId = mongoose.Types.ObjectId(req.user._id);
         Favorites.findOne({ 'user': userId }, (err, favorite) => {
             if (err) return next(err);
-            var posicion = favorite.dishes.indexOf(req.params.dishId);
 
-            if (posicion >= 0) {
-                favorite.dishes.splice(index, 1);
+            if (favorite != null && favorite.dishes.id(req.params.dishId) != null){
+                favorite.dishes.id(req.params.dishId).remove();
                 favorite.save()
                     .then((favorite) => {
                         console.log('Dishhhhh deleted by accident');
@@ -141,7 +140,9 @@ favoriteRouter.route('/:dishId')
                         return next(err);
                     })
 
+            
             }
+            
             else {
                 err = new Error('The dish ' + req.params.dishId + 'was not found as a user favorite.');
                 err.status = 404;
